@@ -40,47 +40,25 @@ pub fn main() !void {
 
     var input_buffer: [4096]u8 = undefined;
     var line = (try stdin.readUntilDelimiterOrEof(&input_buffer, '\n')).?;
-    line = line;
 
     var it = std.mem.splitScalar(u8, line, ' ');
 
+    const n_str = it.next() orelse return std.log.err("Invalid input: no value for \"n\" provided", .{});
+    const m_str = it.next() orelse return std.log.err("Invalid input: no value for \"m\" provided", .{});
+
     // Number of students.
-    const n = blk: {
-        if (it.next()) |n_str| {
-            const trimmed = std.mem.trim(
-                u8,
-                n_str,
-                whitespace,
-            );
-            break :blk std.fmt.parseInt(
-                usize,
-                trimmed,
-                10,
-            ) catch return std.log.err("Failed to parse \"{s}\".", .{trimmed});
-        } else {
-            std.log.err("Invalid input: no value for \"n\" provided", .{});
-            return;
-        }
-    };
+    const n = std.fmt.parseInt(
+        usize,
+        std.mem.trim(u8, n_str, whitespace),
+        10,
+    ) catch return std.log.err("Failed to parse \"{s}\".", .{n_str});
 
     // Number of interests.
-    const m = blk: {
-        if (it.next()) |m_str| {
-            const trimmed = std.mem.trim(
-                u8,
-                m_str,
-                whitespace,
-            );
-            break :blk std.fmt.parseInt(
-                usize,
-                trimmed,
-                10,
-            ) catch return std.log.err("Failed to parse \"{s}\".", .{trimmed});
-        } else {
-            std.log.err("Invalid input: no value for \"m\" provided", .{});
-            return;
-        }
-    };
+    const m = std.fmt.parseInt(
+        usize,
+        std.mem.trim(u8, m_str, whitespace),
+        10,
+    ) catch return std.log.err("Failed to parse \"{s}\"", .{m_str});
 
     std.log.info(
         "There are {} students with {} interests.",
