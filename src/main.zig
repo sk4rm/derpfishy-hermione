@@ -7,7 +7,7 @@ pub const std_options = std.Options{
 };
 
 const whitespace = "\n\t\r ";
-const float = f32;
+const float = f128;
 
 pub fn cosineSimilarity(first: []float, second: []float) float {
     const numerator = calc: {
@@ -129,4 +129,18 @@ pub fn main() !void {
 
         try stdout.print("{d:.2}\n", .{similarity});
     }
+}
+
+test "truncate floats" {
+    const num = @as(
+        comptime_float,
+        @floatFromInt(
+            @as(
+                comptime_int,
+                @intFromFloat(0.655 * 100.0),
+            ),
+        ),
+    ) / 100.0;
+
+    try std.testing.expectEqual(0.65, num);
 }
